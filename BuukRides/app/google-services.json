@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "163703052993",
+    "firebase_url": "https://buuk-rides.firebaseio.com",
+    "project_id": "buuk-rides",
+    "storage_bucket": "buuk-rides.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163703052993:android:7c971cd354ba3435aed240",
+        "android_client_info": {
+          "package_name": "com.android.buukrides"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163703052993-8mpjnkj583jeln31vulf1585cc6hbi9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.buukrides",
+            "certificate_hash": "28bb3cec3a000853568af04fd0ec9d9def160ade"
+          }
+        },
+        {
+          "client_id": "163703052993-8o0fkmbadebv2g8ju2oh822ldgmvaiml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAaeowMSACUa0nseleDOvQnc8ZqwdO7a0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163703052993-8o0fkmbadebv2g8ju2oh822ldgmvaiml.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
