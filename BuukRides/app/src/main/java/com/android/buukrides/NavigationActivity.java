@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,7 +49,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle t;
@@ -56,11 +59,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private CircleImageView imgUserProf;
     private FirebaseAuth mauth;
     private DatabaseReference mCustomerDatabase;
+    private GoogleMap mMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -102,7 +108,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 int id = item.getItemId();
                 switch(id)
                 {
-                    case R.id.nav_tools:
+                    case R.id.nav_profile:
                         startActivity(new Intent(NavigationActivity.this, ProfileActivity.class));
 
                     default:
@@ -112,6 +118,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             }
         });
+
+        // ---------------- USER INFO -------------------------
         mauth = FirebaseAuth.getInstance();
         String userID = mauth.getCurrentUser().getUid();
 
@@ -133,6 +141,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
 
         getUserInfo();
+
+
+        // --------------- MAP ------------------
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
 
 
@@ -215,5 +230,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         return false;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+
     }
 }

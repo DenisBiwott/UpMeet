@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
-        android:id="@+id/nav_tools"
+        android:id="@+id/nav_profile"
         android:name="com.android.buukrides.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_tools" />
