@@ -12,7 +12,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -41,6 +41,11 @@
             android:label="Profile"
             android:parentActivityName=".NavigationActivity"
             android:name=".ProfileActivity" />
+        <activity
+            android:name=".AddVenueActivity"
+            android:label="Add Venue"
+            android:parentActivityName=".NavigationActivity"/>
+
     </application>
 
 </manifest>
