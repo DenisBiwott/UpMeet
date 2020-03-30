@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">UpMeet</string>
     <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="api_key">AIzaSyC2cWqq169RGz8YCo7kccagTYqHYEIsMjA</string>
+    <string name="api_key">AIzaSyCvP-4P33JeQ_9bSHCMmnObFiMcyOaIQMg</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

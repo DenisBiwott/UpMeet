@@ -7,9 +7,13 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -51,6 +55,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,7 +69,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private TextView txtUsername, txtEmail;
     private CircleImageView imgUserProf;
     private FirebaseAuth mauth;
-    private DatabaseReference mCustomerDatabase;
+    private DatabaseReference mCustomerDatabase, mUserDatabase;
+    private String userID, placeName;
     private GoogleMap mMap;
 
 
@@ -126,8 +132,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         // ---------------- USER INFO -------------------------
         mauth = FirebaseAuth.getInstance();
-        String userID = mauth.getCurrentUser().getUid();
+        userID = mauth.getCurrentUser().getUid();
 
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Venues");
+        mUserDatabase.keepSynced(true);
         mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
 
 
@@ -282,13 +290,82 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         return false;
     }
 
+    private void collectPhoneNumbers(Map<String,Object> users) {
+
+//        int size = (int) dataSnapshot.getChildrenCount(); //
+//        Marker[] allMarkers = new Marker[size];
+//        Marker mm;
+
+        ArrayList<Double> phoneNumbers = new ArrayList<>();
+        ArrayList<Double> latitude = new ArrayList<>();
+        double lat, lng;
+        String desc;
+
+        //iterate through each user, ignoring their UID
+        for (Map.Entry<String, Object> entry : users.entrySet()){
+
+            //Get user map
+            Map singleUser = (Map) entry.getValue();
+            //Get phone field and append to list
+            phoneNumbers.add((Double) singleUser.get("Longitude"));
+            latitude.add((Double) singleUser.get("Latitude"));
+            lat = (double) singleUser.get("Latitude");
+            lng = (double) singleUser.get("Longitude");
+            desc = (String) singleUser.get("Description");
+            LatLng latLng = new LatLng(lat, lng);
+            //Toast.makeText(getContext(), ""+ latLng  , Toast.LENGTH_SHORT).show();
+            if (mMap!=null) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(lat, lng))
+                        .title(desc));
+                //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
+            }
+//            mMap.addMarker(new MarkerOptions()
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).position(latLng).title("Farm"));
+
+        }
+
+        //System.out.println(phoneNumbers.toString());
+        //Toast.makeText(getContext(), phoneNumbers.toString(), Toast.LENGTH_SHORT).show();
+
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
             mMap = googleMap;
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
 
+            mUserDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.exists()){
+                        collectPhoneNumbers((Map<String,Object>) dataSnapshot.getValue());
+                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                double lat = marker.getPosition().latitude;
+                                double lng = marker.getPosition().longitude;
+
+                            }
+                        });
+
+                    }else {
+                        Snackbar.make(findViewById(android.R.id.content), "Add new location to view on map", Snackbar.LENGTH_LONG).show();
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }else{
             checkLocationPermission();
 

@@ -92,8 +92,8 @@ public class AddVenueActivity extends AppCompatActivity {
         userID = mAuth.getCurrentUser().getUid();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Venues");
-        key = mUserDatabase.push().toString();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Venues").push();
+        key = mUserDatabase.getKey();
 
         mBtnSaveLoc = findViewById(R.id.btnSaveLoc);
         mEdtFarrmDesc = findViewById(R.id.edtFarmDesc);
@@ -196,15 +196,14 @@ public class AddVenueActivity extends AppCompatActivity {
                                 // ------------ SAVE IMAGE TO STORAGE & DB -----------------
 
                                 newImage.put("venueImageUrl", task.getResult().toString());
-                                mUserDatabase.child(key).updateChildren(newImage);
-                                mUserDatabase.child(key).child("UserID").setValue(user.getUid());
-                                mUserDatabase.child(key).child("UserID").setValue(user.getUid());
-                                mUserDatabase.child(key).child("Longitude").setValue(farmLocation.longitude);
-                                mUserDatabase.child(key).child("Latitude").setValue(farmLocation.latitude);
-                                mUserDatabase.child(key).child("PlaceName").setValue(placeName);
-                                mUserDatabase.child(key).child("Space").setValue(space);
-                                mUserDatabase.child(key).child("Price").setValue(price);
-                                mUserDatabase.child(key).child("Description").setValue(desc).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                mUserDatabase.updateChildren(newImage);
+                                mUserDatabase.child("UserID").setValue(user.getUid());
+                                mUserDatabase.child("Longitude").setValue(farmLocation.longitude);
+                                mUserDatabase.child("Latitude").setValue(farmLocation.latitude);
+                                mUserDatabase.child("PlaceName").setValue(placeName);
+                                mUserDatabase.child("Space").setValue(space);
+                                mUserDatabase.child("Price").setValue(price);
+                                mUserDatabase.child("Description").setValue(desc).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
