@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.android.buukrides">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
@@ -18,10 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".SearchActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/api_key"/>
+            android:value="@string/api_key" />
 
         <activity
             android:name=".NavigationActivity"
@@ -38,14 +39,17 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity
+            android:name=".ProfileActivity"
             android:label="Profile"
-            android:parentActivityName=".NavigationActivity"
-            android:name=".ProfileActivity" />
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".FacilityActivity"
+            android:label="Add Facility"
+            android:parentActivityName=".AddVenueActivity" />
         <activity
             android:name=".AddVenueActivity"
             android:label="Add Venue"
-            android:parentActivityName=".NavigationActivity"/>
-
+            android:parentActivityName=".NavigationActivity" />
     </application>
 
 </manifest>
