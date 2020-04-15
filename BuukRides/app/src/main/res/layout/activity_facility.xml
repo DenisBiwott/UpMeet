@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FacilityActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+         <ProgressBar
+            android:id="@+id/loadingAddFac"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+
+        <EditText
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:background="#0000"
+            android:hint="Facility Name"
+            android:inputType="textCapSentences"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@android:color/darker_gray" />
+
+        <EditText
+            android:id="@+id/edtCapacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:background="#0000"
+            android:hint="Facility Capacity"
+            android:maxLength="4"
+            android:inputType="number"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@android:color/darker_gray" />
+
+        <EditText
+            android:id="@+id/edtCost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:background="#0000"
+            android:hint="Facility Cost (KES)"
+            android:maxLength="9"
+            android:inputType="number"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width= "match_parent"
+            android:layout_height= "wrap_content"
+            android:layout_marginStart="22dp"
+            android:orientation = "horizontal">
+
+            <EditText
+            android:id="@+id/edtOpeningtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight= "1"
+            android:background="#0000"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:hint="Opening Hours"
+            android:padding="16dp" />
+
+            <EditText
+            android:id="@+id/edtClosingtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight= "1"
+            android:background="#0000"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:hint="Closing Hours"
+            android:padding="16dp" />
+
+            </LinearLayout>
+
+            <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@android:color/darker_gray" />
+
+            <ImageView
+            android:id="@+id/imgAddFac"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="22dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/add_image"/>
+
+            <Button
+            android:id="@+id/btnSaveFacility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="28dp"
+            android:background="#009688"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Save"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+             <Button
+            android:id="@+id/btnFinish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="28dp"
+            android:background="#009688"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Finish"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        
+
+        
+
+    </LinearLayout>
+
+</ScrollView>

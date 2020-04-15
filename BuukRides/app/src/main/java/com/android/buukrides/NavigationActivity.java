@@ -4,13 +4,20 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -19,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -72,6 +80,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private DatabaseReference mCustomerDatabase, mUserDatabase;
     private String userID, placeName;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
+    Location mLastLocation;
 
 
     @Override
@@ -160,6 +171,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
 
@@ -205,6 +217,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 //                        Intent cat = new Intent(NavigationActivity.this, MainActivity.class);
 //                        cat.putExtra("status", "notrequested");
 //                        startActivity(cat);
+
+                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                     
 
                     }
                 } else{
@@ -318,8 +333,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(lat, lng))
                         .title(desc));
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
+                // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
             }
 //            mMap.addMarker(new MarkerOptions()
 //                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).position(latLng).title("Farm"));
@@ -337,6 +351,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             mMap = googleMap;
             mMap.getUiSettings().setZoomGesturesEnabled(true);
+            mMap.setMyLocationEnabled(true);
+            mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(120000);
+            mLocationRequest.setFastestInterval(60000);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
 
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -349,6 +369,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                             public void onInfoWindowClick(Marker marker) {
                                 double lat = marker.getPosition().latitude;
                                 double lng = marker.getPosition().longitude;
+
 
                             }
                         });
@@ -375,4 +396,56 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
 
     }
+
+    private Marker mUserMarker;
+
+    LocationCallback mLocationCallback = new LocationCallback(){
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            for(Location location : locationResult.getLocations()){
+                if(getApplicationContext()!=null){
+                    mLastLocation = location;
+
+                    LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+
+                    if (mLastLocation!=null){
+
+                    
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
+
+                         // ------ User location Marker -------------
+                        if(mUserMarker != null){
+                            mUserMarker.remove();
+                        }else{
+
+//                            mUserMarker = mMap.addMarker(new MarkerOptions()
+//                            .position(latLng).title("My Location")
+//                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+    
+                        }
+                        
+
+                    }
+
+                   
+
+                   // pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    //pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation)
+                           //.title("Pickup Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+
+                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                    //CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(pickupLocation, 15);
+                    //mMap.animateCamera(yourLocation);
+
+                    //mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+                    // if(!getDriversAroundStarted)
+                    //     getDriversAround();
+                }
+            }
+        }
+    };
+
+
 }

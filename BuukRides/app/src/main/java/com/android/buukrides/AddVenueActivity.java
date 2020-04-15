@@ -196,27 +196,24 @@ public class AddVenueActivity extends AppCompatActivity {
                                 // ------------ SAVE IMAGE TO STORAGE & DB -----------------
 
                                 newImage.put("venueImageUrl", task.getResult().toString());
-                                mUserDatabase.updateChildren(newImage);
+                                mUserDatabase.updateChildren(newImage); 
                                 mUserDatabase.child("UserID").setValue(user.getUid());
                                 mUserDatabase.child("Longitude").setValue(farmLocation.longitude);
                                 mUserDatabase.child("Latitude").setValue(farmLocation.latitude);
                                 mUserDatabase.child("PlaceName").setValue(placeName);
                                 mUserDatabase.child("Space").setValue(space);
                                 mUserDatabase.child("Price").setValue(price);
-                                mUserDatabase.child("Description").setValue(desc).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()){
-                                            Toast.makeText(AddVenueActivity.this, "Location Saved", Toast.LENGTH_SHORT).show();
-                                            loading.setVisibility(View.GONE);
-                                            finish();
-                                        }
-                                    }
-                                });
+                                mUserDatabase.child("Description").setValue(desc);
 
+                                Toast.makeText(AddVenueActivity.this, "Venue Saved", Toast.LENGTH_SHORT).show();
+                                loading.setVisibility(View.GONE);
+                                Intent intent = new Intent(AddVenueActivity.this, FacilityActivity.class);
+                                intent.putExtra("Key", key);
+                                startActivity(intent);
+                                
 
-                                Toast.makeText(AddVenueActivity.this,
-                                        "Venue Saved", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(AddVenueActivity.this,
+                                //         "Venue Saved", Toast.LENGTH_SHORT).show();
 
                             }
                         });
