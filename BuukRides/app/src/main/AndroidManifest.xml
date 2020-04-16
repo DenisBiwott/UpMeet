@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SearchActivity"></activity>
+
+        <activity android:name=".SearchActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -50,6 +51,11 @@
             android:name=".AddVenueActivity"
             android:label="Add Venue"
             android:parentActivityName=".NavigationActivity" />
+
+        <activity
+            android:name=".MyVenuesActivity"
+            android:label="My Venues"
+            android:parentActivityName=".NavigationActivity"/>
     </application>
 
 </manifest>

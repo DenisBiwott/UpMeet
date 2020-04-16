@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private EditText edtUsername, mPhoneField;
     private TextView mEmailField;
+    private Button mbtnMyVenues;
 
     private CircleImageView mProfileImage;
 
@@ -80,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         mPhoneField = findViewById(R.id.phone);
         mEmailField = findViewById(R.id.email);
         edtUsername = findViewById(R.id.usernameP);
+        mbtnMyVenues = findViewById(R.id.btnMyVenues);
 
         mProfileImage = findViewById(R.id.profileImage);
 
@@ -118,6 +121,12 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkPermissions();
+            }
+        });
+        mbtnMyVenues.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, MyVenuesActivity.class));
             }
         });
 

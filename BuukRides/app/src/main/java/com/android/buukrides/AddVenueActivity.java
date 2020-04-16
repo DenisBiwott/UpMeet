@@ -109,7 +109,7 @@ public class AddVenueActivity extends AppCompatActivity {
 
                 // Start the autocomplete intent.
                 Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.FULLSCREEN, fields)
+                        AutocompleteActivityMode.OVERLAY, fields)
                         .setCountry("KE")
                         .build(AddVenueActivity.this);
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
@@ -205,7 +205,7 @@ public class AddVenueActivity extends AppCompatActivity {
                                 mUserDatabase.child("Price").setValue(price);
                                 mUserDatabase.child("Description").setValue(desc);
 
-                                Toast.makeText(AddVenueActivity.this, "Venue Saved", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddVenueActivity.this, "Venue Saved, now add facility", Toast.LENGTH_SHORT).show();
                                 loading.setVisibility(View.GONE);
                                 Intent intent = new Intent(AddVenueActivity.this, FacilityActivity.class);
                                 intent.putExtra("Key", key);
