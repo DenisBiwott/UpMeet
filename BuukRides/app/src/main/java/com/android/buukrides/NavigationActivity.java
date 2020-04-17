@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -60,10 +62,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -83,6 +88,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
     Location mLastLocation;
+    private SearchView mSearchView;
 
 
     @Override
@@ -166,7 +172,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         getUserInfo();
 
-
         // --------------- MAP ------------------
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -174,10 +179,35 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
+        //---------------Search Bar-----------//STILL CRASHES WHEN GIVEN INVALID LOCATION//
+        mSearchView = findViewById(R.id.sv_location);
 
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = mSearchView.getQuery().toString();
+                List<Address> addressList = null;
 
+                if (location != null || !location.equals("")){
+                    Geocoder geocoder = new Geocoder(NavigationActivity.this);
+                    try{
+                        addressList = geocoder.getFromLocationName(location, 1);
 
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                }
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
 
     }
