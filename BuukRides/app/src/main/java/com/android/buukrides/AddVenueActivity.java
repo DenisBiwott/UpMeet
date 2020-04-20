@@ -128,12 +128,12 @@ public class AddVenueActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 
-                saveFarm();
+                save_venue();
             }
         });
     }
 
-    private void saveFarm() {
+    private void save_venue() {
 
         loading.setVisibility(View.VISIBLE);
 
