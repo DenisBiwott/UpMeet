@@ -67,7 +67,6 @@ public class AddVenueActivity extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
     private String userID, placeName;
     private ProgressBar loading;
-    private FirebaseAuth mauth;
     private FirebaseUser user;
     private ImageView imgAddVenue;
     private Uri resultUri;
