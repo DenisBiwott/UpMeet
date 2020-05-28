@@ -26,7 +26,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginBottom="40dp"
-            android:src="@drawable/ic_meeting_room" />
+            android:src="@drawable/ic_building" />
 
 
 
@@ -64,51 +64,51 @@
             android:layout_marginStart="22dp"
             android:layout_marginEnd="22dp"
             android:background="#0000"
-            android:hint="Description"
+            android:hint="Name"
             android:inputType="textCapSentences"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@android:color/darker_gray" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginRight="40dp"-->
+<!--            android:background="@android:color/darker_gray" />-->
 
-        <EditText
-            android:id="@+id/edtSpace"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginStart="22dp"
-            android:layout_marginEnd="22dp"
-            android:background="#0000"
-            android:hint="Space"
-            android:maxLength="4"
-            android:inputType="number"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+<!--        <EditText-->
+<!--            android:id="@+id/edtSpace"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:layout_marginStart="22dp"-->
+<!--            android:layout_marginEnd="22dp"-->
+<!--            android:background="#0000"-->
+<!--            android:hint="Space"-->
+<!--            android:maxLength="4"-->
+<!--            android:inputType="number"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="16sp" />-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@android:color/darker_gray" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginRight="40dp"-->
+<!--            android:background="@android:color/darker_gray" />-->
 
-        <EditText
-            android:id="@+id/edtPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginStart="22dp"
-            android:layout_marginEnd="22dp"
-            android:background="#0000"
-            android:hint="Price (KES)"
-            android:inputType="number"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+<!--        <EditText-->
+<!--            android:id="@+id/edtPrice"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:layout_marginStart="22dp"-->
+<!--            android:layout_marginEnd="22dp"-->
+<!--            android:background="#0000"-->
+<!--            android:hint="Price (KES)"-->
+<!--            android:inputType="number"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="16sp" />-->
 
         <View
             android:layout_width="match_parent"
@@ -162,7 +162,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginRight="40dp"
             android:layout_marginBottom="28dp"
-            android:background="#009688"
+            android:background="@drawable/btn_rounded"
             android:gravity="center"
             android:padding="16dp"
             android:text="Next"

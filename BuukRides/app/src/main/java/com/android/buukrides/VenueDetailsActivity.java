@@ -1,7 +1,6 @@
 package com.android.buukrides;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,15 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,59 +20,53 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class MyVenuesActivity extends AppCompatActivity {
+public class VenueDetailsActivity extends AppCompatActivity {
+
     private DatabaseReference DatabaseRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userID;
-    private RecyclerView mFriendList;
+    private RecyclerView mRecylcerVenues;
     private Query venuesOwnedByUser;
     private TextView mTxtNoVenues;
-
+    private String venue_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_venues);
+        setContentView(R.layout.activity_venue_details);
 
-        FloatingActionButton floating_b = findViewById(R.id.floating_b);
-        floating_b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MyVenuesActivity.this, AddVenueActivity.class));
-            }
-        });
+        venue_id = getIntent().getStringExtra("venue_id");
 
-        //mLstMyVenues = findViewById(R.id.lstMyVenues);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         userID = user.getUid();
-        DatabaseRef = FirebaseDatabase.getInstance().getReference().child("Venues");
+        DatabaseRef = FirebaseDatabase.getInstance().getReference().child("Venues").child(venue_id);
         DatabaseRef.keepSynced(true);
-        mFriendList =   findViewById(R.id.blog_list_friends);
+        mRecylcerVenues =   findViewById(R.id.facilities_list);
         mTxtNoVenues = findViewById(R.id.txtNoVenues);
 
-        mFriendList.setHasFixedSize(true);
-        mFriendList.setLayoutManager(new LinearLayoutManager(MyVenuesActivity.this));
+        mRecylcerVenues.setHasFixedSize(true);
+        mRecylcerVenues.setLayoutManager(new LinearLayoutManager(VenueDetailsActivity.this));
 
-        venuesOwnedByUser = DatabaseRef.orderByChild("UserID").equalTo(userID);
+        venuesOwnedByUser = DatabaseRef.orderByChild("Name");
         venuesOwnedByUser.keepSynced(true);
                 
-        venuesOwnedByUser.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    mTxtNoVenues.setVisibility(View.GONE);
-                }else{
-                    mTxtNoVenues.setVisibility(View.VISIBLE);
-                }
-            }
+        // venuesOwnedByUser.addValueEventListener(new ValueEventListener() {
+        //     @Override
+        //     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        //         if(dataSnapshot.exists()){
+            //             mTxtNoVenues.setVisibility(View.GONE);
+        //         }else{
+        //             mTxtNoVenues.setVisibility(View.VISIBLE);
+        //         }
+        //     }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        //     @Override
+        //     public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+        //     }
+        // });
     }
 
     @Override
@@ -87,7 +76,7 @@ public class MyVenuesActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<Friends, VenueViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, VenueViewHolder>(
 
                 Friends.class,
-                R.layout.blog_row_friends,
+                R.layout.layout_facilities,
                 VenueViewHolder.class,
                 venuesOwnedByUser
         )
@@ -98,27 +87,27 @@ public class MyVenuesActivity extends AppCompatActivity {
                 //final String post_key = getRef(position).getKey();
 
                 // ---- VENUE ID ------
-                final String venue_id = getRef(position).getKey();
+                final String facility_id = getRef(position).getKey();
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(MyVenuesActivity.this, VenueDetailsActivity.class);
-                        intent.putExtra("venue_id", venue_id);
+                        Intent intent = new Intent(VenueDetailsActivity.this, FacilityDetailsActivity.class);
+                        intent.putExtra("facility_id", facility_id);
                         startActivity(intent);
                         
                         
                     }
                 });
 
-                DatabaseRef.child(venue_id).addValueEventListener(new ValueEventListener() {
+                DatabaseRef.child(facility_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String desc = (String) dataSnapshot.child("Description").getValue();
-                        String name = (String) dataSnapshot.child("PlaceName").getValue();
+                        String capacity = (String) dataSnapshot.child("Capacity").getValue();
+                        String name = (String) dataSnapshot.child("Name").getValue();
 
-                        viewHolder.mTxtDesc.setText(desc);
+                        viewHolder.mTxtCapacity.setText(capacity);
                         viewHolder.mTxtName.setText(name);
                         
                     }
@@ -133,7 +122,7 @@ public class MyVenuesActivity extends AppCompatActivity {
             }
         };
 
-        mFriendList.setAdapter(firebaseRecyclerAdapter);
+        mRecylcerVenues.setAdapter(firebaseRecyclerAdapter);
 
 
     }
@@ -141,7 +130,7 @@ public class MyVenuesActivity extends AppCompatActivity {
     public static class VenueViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
-        TextView mTxtDesc, mTxtName;
+        TextView mTxtCapacity, mTxtName;
 
 
         public VenueViewHolder(View itemView) {
@@ -149,8 +138,8 @@ public class MyVenuesActivity extends AppCompatActivity {
 
             mView = itemView;
 
-            mTxtDesc = (TextView) mView.findViewById(R.id.txtDesc);
-            mTxtName = (TextView) mView.findViewById(R.id.txtName);
+            mTxtCapacity = (TextView) mView.findViewById(R.id.txtFacilityCapacity);
+            mTxtName = (TextView) mView.findViewById(R.id.txtFacilityName);
 
 
         }
