@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.android.buukrides.ui.share.ShareFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -45,6 +46,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -107,13 +110,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(NavigationActivity.this, AddVenueActivity.class));
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(NavigationActivity.this, AddVenueActivity.class));
+//            }
+//        });
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -146,12 +149,19 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 {
                     case R.id.nav_profile:
                         startActivity(new Intent(NavigationActivity.this, ProfileActivity.class));
+                        break;
+                    case R.id.nav_about:
+                        startActivity(new Intent(NavigationActivity.this, AboutUsActivity.class));
+                        break;
+                    case R.id.nav_venues:
+                        startActivity(new Intent(NavigationActivity.this, MyVenuesActivity.class));
+                        break;
 
-                    default:
-                        return true;
+
+
                 }
 
-
+                return true;
             }
         });
 
@@ -179,6 +189,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
 
         getUserInfo();
+        createLocationRequest();
 
         // --------------- MAP ------------------
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -187,7 +198,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-        //---------------Search Bar-----------//STILL CRASHES WHEN GIVEN INVALID LOCATION//
+        //---------------Search Bar-----------
         mSearchView = findViewById(R.id.sv_location);
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -200,13 +211,23 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     Geocoder geocoder = new Geocoder(NavigationActivity.this);
                     try{
                         addressList = geocoder.getFromLocationName(location, 1);
+                    
+                        
+                        if(addressList.isEmpty()){
+                            Toast.makeText(NavigationActivity.this, "Place doesn't exist", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Address address = addressList.get(0);
+                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+
+                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Toast.makeText(NavigationActivity.this, "Exeption: " + e, Toast.LENGTH_SHORT).show();
+                
                     }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+
                 }
                 return false;
             }
@@ -217,12 +238,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        createLocationRequest();
-
-
     }
 
-    //Requests Location Permission
+    //---------- REQUEST USER PERMISSION TO USE LOCATION-----------------------
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -245,6 +263,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             }
         }
+
     }
 
     @Override
@@ -271,7 +290,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     }
 
 
-    //----------------Request user to turn on location on startup------------------
+    //----------------REQUEST USE TO TURN ON LOCATION ON STARTUP------------------
     protected void createLocationRequest() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
@@ -306,6 +325,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                         resolvable.startResolutionForResult(NavigationActivity.this,
                                 REQUEST_CHECK_SETTINGS);
                     } catch (IntentSender.SendIntentException sendEx) {
+                        Toast.makeText(NavigationActivity.this, "Please try again", Toast.LENGTH_SHORT);
                         // Ignore the error.
                     }
                 }
@@ -458,7 +478,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                         });
 
                     }else {
-                        Snackbar.make(findViewById(android.R.id.content), "Add new location to view on map", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Hi, Add your venue to show on the map!", Snackbar.LENGTH_LONG).show();
 
                     }
 
@@ -472,9 +492,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             });
         }else{
             checkLocationPermission();
-
+//            Toast.makeText(NavigationActivity.this, "Went to else", Toast.LENGTH_SHORT).show();
         }
-
 
 
 

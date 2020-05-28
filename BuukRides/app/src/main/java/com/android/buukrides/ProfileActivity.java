@@ -263,7 +263,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else if (phoneFinal == null){
             dialog.dismiss();
-            Toast.makeText(this, "Empty Phone", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter a valid Phone number", Toast.LENGTH_SHORT).show();
         }
         else if(mUsername.length()<3){
             dialog.dismiss();
@@ -275,7 +275,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (phoneFinal.length()<9){
             dialog.dismiss();
 
-            Toast.makeText(ProfileActivity.this,"Your Phone is too short",
+            Toast.makeText(ProfileActivity.this,"Please enter a valid Phone number",
                     Toast.LENGTH_SHORT).show();
 
         }

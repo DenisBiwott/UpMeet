@@ -93,7 +93,7 @@ public class FacilityActivity extends AppCompatActivity {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                                
-                                mEdtTime.setText(selectedHour + ":" + selectedMinute);
+                                mEdtTime.setText(String.format("%02d:%02d", selectedHour, selectedMinute) );
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -111,7 +111,7 @@ public class FacilityActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(FacilityActivity.this, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                                mEdtclosingTime.setText(selectedHour + ":" + selectedMinute);
+                                mEdtclosingTime.setText(String.format("%02d:%02d", selectedHour, selectedMinute) );
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -139,8 +139,8 @@ public class FacilityActivity extends AppCompatActivity {
         mBtnFinishFac.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
-                startActivity(new Intent(FacilityActivity.this, NavigationActivity.class));
+
+                startActivity(new Intent(FacilityActivity.this, MyVenuesActivity.class));
                 finish();
             }
         });

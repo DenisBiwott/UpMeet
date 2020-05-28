@@ -14,6 +14,20 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/txtNoVenues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/no_venue_prompt"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:drawableTop="@drawable/ic_broker"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_b"
         android:layout_width="wrap_content"
