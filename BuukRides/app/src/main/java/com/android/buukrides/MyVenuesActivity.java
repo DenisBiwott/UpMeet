@@ -3,6 +3,7 @@ package com.android.buukrides;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,9 +31,10 @@ public class MyVenuesActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userID;
-    private RecyclerView mFriendList;
+    private RecyclerView mRecMyVenues;
     private Query venuesOwnedByUser;
     private TextView mTxtNoVenues;
+    private RecyclerView.LayoutManager layoutManager;
 
 
     @Override
@@ -54,13 +56,14 @@ public class MyVenuesActivity extends AppCompatActivity {
         userID = user.getUid();
         DatabaseRef = FirebaseDatabase.getInstance().getReference().child("Venues");
         DatabaseRef.keepSynced(true);
-        mFriendList =   findViewById(R.id.blog_list_friends);
+        mRecMyVenues =   findViewById(R.id.RecMyVenues);
         mTxtNoVenues = findViewById(R.id.txtNoVenues);
 
-        mFriendList.setHasFixedSize(true);
-        mFriendList.setLayoutManager(new LinearLayoutManager(MyVenuesActivity.this));
+        mRecMyVenues.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        mRecMyVenues.setLayoutManager(layoutManager);
 
-        venuesOwnedByUser = DatabaseRef.orderByChild("UserID").equalTo(userID);
+        venuesOwnedByUser = DatabaseRef.equalTo(userID).orderByChild("UserID");
         venuesOwnedByUser.keepSynced(true);
                 
         venuesOwnedByUser.addValueEventListener(new ValueEventListener() {
@@ -133,7 +136,7 @@ public class MyVenuesActivity extends AppCompatActivity {
             }
         };
 
-        mFriendList.setAdapter(firebaseRecyclerAdapter);
+        mRecMyVenues.setAdapter(firebaseRecyclerAdapter);
 
 
     }
@@ -149,8 +152,8 @@ public class MyVenuesActivity extends AppCompatActivity {
 
             mView = itemView;
 
-            mTxtDesc = (TextView) mView.findViewById(R.id.txtDesc);
-            mTxtName = (TextView) mView.findViewById(R.id.txtName);
+            mTxtDesc = mView.findViewById(R.id.txtDesc);
+            mTxtName = mView.findViewById(R.id.txtName);
 
 
         }

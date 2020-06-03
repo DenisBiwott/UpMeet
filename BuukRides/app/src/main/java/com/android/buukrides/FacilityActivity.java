@@ -53,6 +53,7 @@ public class FacilityActivity extends AppCompatActivity {
     private String userID, key;
     private ProgressBar loading;
     private Uri resultUri;
+    private String venuekey;
     private static final int REQUEST_READ_EXTERNAL = 1234;
 
     @Override
@@ -76,12 +77,9 @@ public class FacilityActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent = getIntent();
-        String venuekey = intent.getStringExtra("Key");
+        venuekey = intent.getStringExtra("Key");
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Venues").child(venuekey).child("Facility").push();
-        key = mUserDatabase.getKey();
-
-    
+        
         mEdtTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +183,10 @@ public class FacilityActivity extends AppCompatActivity {
         else  {
 
 
+                mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Venues")
+                                                    .child(venuekey).child("Facility").push();
+                key = mUserDatabase.getKey();
+
                 final StorageReference filePath = FirebaseStorage.getInstance().getReference()
                                     .child("venue_images").child(key).child("facility_images");
                 Bitmap bitmap = null;
@@ -205,7 +207,9 @@ public class FacilityActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //Uri url = taskSnapshot.getDownloadUrl();
 
-                        final Map newImage = new HashMap();
+                        
+
+                        final Map facilityMap = new HashMap();
 
                         filePath.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
@@ -213,13 +217,19 @@ public class FacilityActivity extends AppCompatActivity {
 
                                 // ------------ SAVE IMAGE TO STORAGE & DB -----------------
 
-                                newImage.put("facilityImageUrl", task.getResult().toString());
-                                mUserDatabase.updateChildren(newImage);
-                                mUserDatabase.child("Name").setValue(name);
-                                mUserDatabase.child("Capacity").setValue(capacity);
-                                mUserDatabase.child("Cost").setValue(cost);
-                                mUserDatabase.child("OpeningTime").setValue(openingTime);
-                                mUserDatabase.child("ClosingTime").setValue(closingTime);
+                                    
+                                facilityMap.put("facilityImageUrl", task.getResult().toString());
+                                facilityMap.put("Name", name);
+                                facilityMap.put("Capacity", capacity);
+                                facilityMap.put("Cost", cost);
+                                facilityMap.put("OpeningTime", openingTime);
+                                facilityMap.put("ClosingTime", closingTime);
+                                mUserDatabase.updateChildren(facilityMap);
+                                // mUserDatabase.child("Name").setValue(name);
+                                // mUserDatabase.child("Capacity").setValue(capacity);
+                                // mUserDatabase.child("Cost").setValue(cost);
+                                // mUserDatabase.child("OpeningTime").setValue(openingTime);
+                                // mUserDatabase.child("ClosingTime").setValue(closingTime);
                             
                                 Toast.makeText(FacilityActivity.this, "Facility Saved", Toast.LENGTH_SHORT).show();
                                 loading.setVisibility(View.GONE);
@@ -230,10 +240,8 @@ public class FacilityActivity extends AppCompatActivity {
                                 mEdtName.setText("");
                                 mEdtCapacity.setText("");
                                 mEdtCost.setText("");
-                                imgAddVenue.setImageURI(null);
-
-                                
-                                
+                                //imgAddVenue.setImageURI(null);
+                           
 
                                 // Toast.makeText(AddVenueActivity.this,
                                 //         "Venue Saved", Toast.LENGTH_SHORT).show();

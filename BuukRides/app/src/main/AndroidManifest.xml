@@ -18,8 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".FacilityDetailsActivity"></activity>
-        <activity android:name=".VenueDetailsActivity" />
+
         <activity android:name=".SearchActivity" />
 
         <meta-data
@@ -60,6 +59,13 @@
             android:name=".AboutUsActivity"
             android:label="About Us"
             android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".FacilityDetailsActivity"
+            android:label="Facility Details"/>
+        <activity
+            android:name=".VenueDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".NavigationActivity"/>
     </application>
 
 </manifest>

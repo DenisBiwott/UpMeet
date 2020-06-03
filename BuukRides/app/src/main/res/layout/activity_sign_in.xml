@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/logo"
         android:textColor="#FFFFFF"
-        android:text="Booking made Easy!"/>
+        android:text="At your fingertips!"/>
 
 
 </RelativeLayout>
