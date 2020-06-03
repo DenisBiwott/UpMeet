@@ -6,11 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,17 +23,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 public class VenueDetailsActivity extends AppCompatActivity {
 
-    private DatabaseReference DatabaseRef;
+    private DatabaseReference VenDatabaseRef;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userID;
-    private RecyclerView mRecylcerVenues;
-    private Query venuesOwnedByUser;
-    private TextView mTxtNoVenues;
+    private RecyclerView RecMyFacilities;
+    private Query facilitiesOwnedByVenue;
     private String venue_id;
+    private TextView mTxtVenueName, mTxtLocation;
+    private CollapsingToolbarLayout mcollapsing_toolbar;
+    private ImageView mImgVenueImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,35 +47,59 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
         venue_id = getIntent().getStringExtra("venue_id");
 
+        RecMyFacilities =   findViewById(R.id.facilities_list);
+        RecMyFacilities.setHasFixedSize(true);
+        RecMyFacilities.setLayoutManager(new LinearLayoutManager(VenueDetailsActivity.this));
+
+        mTxtVenueName = findViewById(R.id.venue_name);
+        mTxtLocation = findViewById(R.id.venue_location);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         userID = user.getUid();
-        DatabaseRef = FirebaseDatabase.getInstance().getReference().child("Venues").child(venue_id);
-        DatabaseRef.keepSynced(true);
-        mRecylcerVenues =   findViewById(R.id.facilities_list);
-        mTxtNoVenues = findViewById(R.id.txtNoVenues);
+        VenDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Venues").child(venue_id);
+     
+        facilitiesOwnedByVenue = VenDatabaseRef.child("Facility").orderByChild("Name");
+        facilitiesOwnedByVenue.keepSynced(true);
+        mcollapsing_toolbar = findViewById(R.id.collapsing_toolbar);
+        mImgVenueImage = findViewById(R.id.expanded_venue_image);
 
-        mRecylcerVenues.setHasFixedSize(true);
-        mRecylcerVenues.setLayoutManager(new LinearLayoutManager(VenueDetailsActivity.this));
+        //Populate venue details and location
+        VenDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = (String) dataSnapshot.child("Description").getValue();
+                String location = (String) dataSnapshot.child("PlaceName").getValue();
+                final String mVenueImageUrl = (String) dataSnapshot.child("venueImageUrl").getValue();
+                // Toast.makeText(VenueDetailsActivity.this, ""+ name, Toast.LENGTH_SHORT).show();
 
-        venuesOwnedByUser = DatabaseRef.orderByChild("Name");
-        venuesOwnedByUser.keepSynced(true);
-                
-        // venuesOwnedByUser.addValueEventListener(new ValueEventListener() {
-        //     @Override
-        //     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //         if(dataSnapshot.exists()){
-            //             mTxtNoVenues.setVisibility(View.GONE);
-        //         }else{
-        //             mTxtNoVenues.setVisibility(View.VISIBLE);
-        //         }
-        //     }
+                mcollapsing_toolbar.setTitle(name);
+                mTxtVenueName.setText(name);
+                mTxtLocation.setText(location);
 
-        //     @Override
-        //     public void onCancelled(@NonNull DatabaseError databaseError) {
+                Picasso.get().load(mVenueImageUrl).networkPolicy(NetworkPolicy.OFFLINE)
+                        .placeholder(R.drawable.new_picture).into(mImgVenueImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
 
-        //     }
-        // });
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        Picasso.get().load(mVenueImageUrl).placeholder(R.drawable.new_picture).into(mImgVenueImage);
+
+                    }
+
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -77,8 +110,7 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
                 Friends.class,
                 R.layout.layout_facilities,
-                VenueViewHolder.class,
-                venuesOwnedByUser
+                VenueViewHolder.class,facilitiesOwnedByVenue
         )
         {
             @Override
@@ -86,7 +118,7 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
                 //final String post_key = getRef(position).getKey();
 
-                // ---- VENUE ID ------
+                // ---- Facility ID ------
                 final String facility_id = getRef(position).getKey();
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +127,14 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(VenueDetailsActivity.this, FacilityDetailsActivity.class);
                         intent.putExtra("facility_id", facility_id);
+                        intent.putExtra("venue_id", venue_id);
                         startActivity(intent);
-                        
-                        
+
+
                     }
                 });
 
-                DatabaseRef.child(facility_id).addValueEventListener(new ValueEventListener() {
+                VenDatabaseRef.child("Facility").child(facility_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String capacity = (String) dataSnapshot.child("Capacity").getValue();
@@ -109,7 +142,7 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
                         viewHolder.mTxtCapacity.setText(capacity);
                         viewHolder.mTxtName.setText(name);
-                        
+
                     }
 
                     @Override
@@ -118,19 +151,18 @@ public class VenueDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-            
             }
         };
 
-        mRecylcerVenues.setAdapter(firebaseRecyclerAdapter);
+        RecMyFacilities.setAdapter(firebaseRecyclerAdapter);
 
 
     }
 
     public static class VenueViewHolder extends RecyclerView.ViewHolder {
 
-        View mView;
-        TextView mTxtCapacity, mTxtName;
+        private View mView;
+        private TextView mTxtCapacity, mTxtName;
 
 
         public VenueViewHolder(View itemView) {
@@ -138,8 +170,8 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
             mView = itemView;
 
-            mTxtCapacity = (TextView) mView.findViewById(R.id.txtFacilityCapacity);
-            mTxtName = (TextView) mView.findViewById(R.id.txtFacilityName);
+            mTxtCapacity = mView.findViewById(R.id.txtFacilityCapacity);
+            mTxtName = mView.findViewById(R.id.txtFacilityName);
 
 
         }
