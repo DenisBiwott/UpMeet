@@ -89,6 +89,19 @@
                 android:background="@null"
                 android:hint="Add Email"
                 android:textSize="18sp"/>
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="56dp"
+                android:layout_marginTop="20dp"
+                android:hint="Business Account"
+                android:textSize="18sp"
+                android:checked="true"
+                android:textOff="Enable Business Account"
+                android:textOn="Business Account"/>
+
             <Button
                 android:id="@+id/btnMyVenues"
                 android:layout_width="match_parent"

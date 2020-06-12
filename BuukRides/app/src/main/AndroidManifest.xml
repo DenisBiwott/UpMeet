@@ -19,8 +19,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".SearchActivity" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
@@ -61,11 +59,21 @@
             android:parentActivityName=".NavigationActivity" />
         <activity
             android:name=".FacilityDetailsActivity"
-            android:label="Facility Details"/>
+            android:label="Facility Details" />
         <activity
             android:name=".VenueDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".NavigationActivity"/>
+            android:parentActivityName=".NavigationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BookingsActivity"
+            android:label="Facility Reservation" />
+        <activity
+            android:name=".HistoryActivity"
+            android:label="My History"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".FinalizeBookingActivity"
+            android:label="Reservation Details"/>
     </application>
 
 </manifest>

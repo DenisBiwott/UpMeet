@@ -12,11 +12,11 @@
 
         <item
             android:id="@+id/nav_venues"
-            android:icon="@drawable/ic_venue"
+            android:icon="@drawable/ic_briefcase"
             android:title="Venues" />
 
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_history"
             android:icon="@drawable/ic_history_black"
             android:title="History" />
         <item

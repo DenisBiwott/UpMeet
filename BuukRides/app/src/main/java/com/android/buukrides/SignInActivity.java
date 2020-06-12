@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -26,13 +28,15 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mauth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private DatabaseReference mUserDatabaseRef;
+    private FirebaseUser current_user;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
+        mUserDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
         mauth = FirebaseAuth.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,6 +70,13 @@ public class SignInActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
+                //Store user token in database
+                current_user = mauth.getCurrentUser();
+                final String user_id = current_user.getUid();
+                String user_token = FirebaseInstanceId.getInstance().getToken();
+                mUserDatabaseRef.child(user_id).child("notificationTokens").child(user_token).setValue(true);
+
+
                 FirebaseInstanceId.getInstance().getInstanceId()
                         .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                             @Override
@@ -77,8 +88,9 @@ public class SignInActivity extends AppCompatActivity {
                                         FirebaseUserMetadata metadata = mauth.getCurrentUser().getMetadata();
                                         if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()){
                                             //New User
-                                            Toast.makeText(SignInActivity.this, "Welcome to " + R.string.app_name + " !", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SignInActivity.this, "Welcome to " + "UpMeet" + " !", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(SignInActivity.this, NavigationActivity.class));
+                                            mUserDatabaseRef.child(user_id).child("username").setValue(user.getDisplayName());
                                             finish();
                                         }else {
                                             //Exixsting User

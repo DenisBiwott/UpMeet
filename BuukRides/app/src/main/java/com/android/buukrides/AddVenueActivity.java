@@ -96,8 +96,6 @@ public class AddVenueActivity extends AppCompatActivity {
 
         mBtnSaveLoc = findViewById(R.id.btnSaveLoc);
         mEdtFarrmDesc = findViewById(R.id.edtFarmDesc);
-//        mEdtVenueSpace = findViewById(R.id.edtSpace);
-//        mEdtVenuePrice = findViewById(R.id.edtPrice);
         mTxtSearchLoc = findViewById(R.id.txtSearchLoc);
         imgAddVenue = findViewById(R.id.imgAddVenue);
         loading = findViewById(R.id.loadingAddLoc);
@@ -137,8 +135,6 @@ public class AddVenueActivity extends AppCompatActivity {
         loading.setVisibility(View.VISIBLE);
 
         final String desc = mEdtFarrmDesc.getText().toString().trim();
-//        final String space = mEdtVenueSpace.getText().toString().trim();
-//        final String price = mEdtVenuePrice.getText().toString().trim();
 
 
         if (farmLocation == null){
@@ -149,13 +145,6 @@ public class AddVenueActivity extends AppCompatActivity {
             loading.setVisibility(View.GONE);
             Toast.makeText(this, "Enter Description", Toast.LENGTH_SHORT).show();
         }
-//        else if (space.isEmpty()){
-//            loading.setVisibility(View.GONE);
-//            Toast.makeText(this, "Enter Space Number", Toast.LENGTH_SHORT).show();
-//        }
-//        else if (price.isEmpty()){
-//            loading.setVisibility(View.GONE);
-//            Toast.makeText(this, "Enter Venue Price", Toast.LENGTH_SHORT).show();
 //        }
         else if (resultUri == null){
             loading.setVisibility(View.GONE);
@@ -200,12 +189,12 @@ public class AddVenueActivity extends AppCompatActivity {
                                 mUserDatabase.child("Longitude").setValue(farmLocation.longitude);
                                 mUserDatabase.child("Latitude").setValue(farmLocation.latitude);
                                 mUserDatabase.child("PlaceName").setValue(placeName);
-//                                mUserDatabase.child("Space").setValue(space);
-//                                mUserDatabase.child("Price").setValue(price);
                                 mUserDatabase.child("Description").setValue(desc);
-
-                                Toast.makeText(AddVenueActivity.this, "Venue Saved, now add facility", Toast.LENGTH_SHORT).show();
+                                mUserDatabase.child("venue_id").setValue(key);
                                 loading.setVisibility(View.GONE);
+
+
+
                                 Intent intent = new Intent(AddVenueActivity.this, FacilityActivity.class);
                                 intent.putExtra("Key", key);
                                 startActivity(intent);

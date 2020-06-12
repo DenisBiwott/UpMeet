@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -63,6 +64,32 @@ public class VenueDetailsActivity extends AppCompatActivity {
         facilitiesOwnedByVenue.keepSynced(true);
         mcollapsing_toolbar = findViewById(R.id.collapsing_toolbar);
         mImgVenueImage = findViewById(R.id.expanded_venue_image);
+        final FloatingActionButton mFltNewFacility = findViewById(R.id.new_facility);
+        mFltNewFacility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VenueDetailsActivity.this, FacilityActivity.class);
+                intent.putExtra("Key", venue_id);
+                startActivity(intent);
+            }
+        });
+        VenDatabaseRef.child("UserID").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String owner_id = (String)dataSnapshot.getValue();
+                if (owner_id.equals(userID)){
+                    mFltNewFacility.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mFltNewFacility.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         //Populate venue details and location
         VenDatabaseRef.addValueEventListener(new ValueEventListener() {
