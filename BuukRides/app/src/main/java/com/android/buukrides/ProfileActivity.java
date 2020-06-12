@@ -16,8 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,8 +85,20 @@ public class ProfileActivity extends AppCompatActivity {
         mEmailField = findViewById(R.id.email);
         edtUsername = findViewById(R.id.usernameP);
         mbtnMyVenues = findViewById(R.id.btnMyVenues);
-
         mProfileImage = findViewById(R.id.profileImage);
+
+        Switch sw = findViewById(R.id.switch1);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mbtnMyVenues.setVisibility(View.VISIBLE);
+                    // The toggle is enabled
+                } else {
+                    // The toggle is disabled
+                    mbtnMyVenues.setVisibility(View.GONE);
+                }
+            }
+        });
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Updating info...");

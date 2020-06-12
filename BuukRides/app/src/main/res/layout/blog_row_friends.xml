@@ -29,9 +29,9 @@
                 android:id="@+id/txtDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
-                android:text="Desc"
+                android:text="Description"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
@@ -39,7 +39,7 @@
                 android:id="@+id/txtName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="8dp"
                 android:text="Name"
                 android:textStyle="normal"

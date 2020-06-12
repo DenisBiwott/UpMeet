@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -43,8 +46,9 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 public class FacilityActivity extends AppCompatActivity {
 
-    private EditText mEdtTime, mEdtclosingTime, mEdtName,
+    private EditText mEdtName,
              mEdtCapacity, mEdtCost ;
+    private TextView mEdtclosingTime, mEdtTime;
     private Button mBtnSaveFac, mBtnFinishFac;
     private ImageView imgAddVenue;
     private FirebaseAuth mAuth;
@@ -60,6 +64,7 @@ public class FacilityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facility);
+        Toast.makeText(FacilityActivity.this, "Add your facility", Toast.LENGTH_SHORT).show();
 
     
         mEdtTime = findViewById(R.id.edtOpeningtime);

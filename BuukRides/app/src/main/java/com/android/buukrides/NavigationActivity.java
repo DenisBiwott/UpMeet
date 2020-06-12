@@ -1,6 +1,7 @@
 package com.android.buukrides;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -37,6 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -156,7 +158,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     case R.id.nav_venues:
                         startActivity(new Intent(NavigationActivity.this, MyVenuesActivity.class));
                         break;
-
+                    case R.id.nav_history:
+                        startActivity(new Intent(NavigationActivity.this, HistoryActivity.class));
+                        break;
 
 
                 }
@@ -259,11 +263,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                         .show();
             } else {
                 ActivityCompat.requestPermissions(NavigationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-
             }
         }
-
     }
 
     @Override
@@ -273,12 +274,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             case 1:{
                 if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-//                        Intent cat = new Intent(NavigationActivity.this, MainActivity.class);
-//                        cat.putExtra("status", "notrequested");
-//                        startActivity(cat);
-
                             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                     
 
                     }
                 } else{
@@ -418,6 +414,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         ArrayList<Double> latitude = new ArrayList<>();
         double lat, lng;
         String desc;
+        String venue_id;
 
         //iterate through each user, ignoring their UID
         for (Map.Entry<String, Object> entry : users.entrySet()){
@@ -430,12 +427,43 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             lat = (double) singleUser.get("Latitude");
             lng = (double) singleUser.get("Longitude");
             desc = (String) singleUser.get("Description");
+            venue_id = (String) singleUser.get("venue_id");
             LatLng latLng = new LatLng(lat, lng);
             //Toast.makeText(getContext(), ""+ latLng  , Toast.LENGTH_SHORT).show();
             if (mMap!=null) {
                 mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(lat, lng))
-                        .title(desc));
+                        .title(desc)
+                        .snippet(venue_id));
+
+
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        View window = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+                        TextView title = window.findViewById(R.id.title);
+                        title.setText(marker.getTitle());
+
+                        return window;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+
+                        return null;
+
+                    }
+
+                });
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Intent intent = new Intent(NavigationActivity.this, VenueDetailsActivity.class);
+                        intent.putExtra("venue_id", marker.getSnippet());
+                        startActivity(intent);
+
+                    }
+                });
                 // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12));
             }
 //            mMap.addMarker(new MarkerOptions()
@@ -467,15 +495,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
                     if (dataSnapshot.exists()){
                         collectPhoneNumbers((Map<String,Object>) dataSnapshot.getValue());
-                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                            @Override
-                            public void onInfoWindowClick(Marker marker) {
-                                double lat = marker.getPosition().latitude;
-                                double lng = marker.getPosition().longitude;
-
-
-                            }
-                        });
 
                     }else {
                         Snackbar.make(findViewById(android.R.id.content), "Hi, Add your venue to show on the map!", Snackbar.LENGTH_LONG).show();
