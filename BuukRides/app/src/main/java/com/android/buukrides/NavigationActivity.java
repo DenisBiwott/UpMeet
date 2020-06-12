@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.android.buukrides.ui.share.ShareFragment;
@@ -161,8 +162,22 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     case R.id.nav_history:
                         startActivity(new Intent(NavigationActivity.this, HistoryActivity.class));
                         break;
+                    case R.id.nav_call_us:
+                        String phone = "+254790462100";
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_feedback:
+                        String email = "denisbiwott@gmail.com";
+                        String chooserTitle = "Please select email app to send UpMeet feedback";
+//                        String subject = "UpMeet feedback";
+//                        String body = "I think ...";
+                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
+//                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+//                        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
 
-
+                        startActivity(Intent.createChooser(emailIntent, chooserTitle));
+                        break;
                 }
 
                 return true;

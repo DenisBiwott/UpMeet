@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/top_group"
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_profile"
@@ -13,17 +15,33 @@
         <item
             android:id="@+id/nav_venues"
             android:icon="@drawable/ic_briefcase"
-            android:title="Venues" />
+            android:title="My Venues" />
 
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_history_black"
-            android:title="History" />
+            android:title="My History" />
+    </group>
+
+    <group
+        android:id="@+id/bottom_group"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="Feedback" />
+
+        <item
+            android:id="@+id/nav_call_us"
+            android:icon="@drawable/ic_call"
+            android:title="Call Us" />
+
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about_us"
-            android:title="About" />
+            android:title="About UpMeet" />
+        
     </group>
-
 
 </menu>
