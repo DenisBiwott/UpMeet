@@ -74,6 +74,8 @@
         <activity
             android:name=".FinalizeBookingActivity"
             android:label="Reservation Details"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>
