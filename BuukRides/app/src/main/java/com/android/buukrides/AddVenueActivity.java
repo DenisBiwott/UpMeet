@@ -39,6 +39,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,7 +56,7 @@ public class AddVenueActivity extends AppCompatActivity {
     private EditText mEdtFarrmDesc, mEdtVenueSpace, mEdtVenuePrice;
     private TextView mTxtSearchLoc;
     private Button mBtnSaveLoc;
-    private LatLng farmLocation;
+    private LatLng venueLocation;
     int AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final int REQUEST_READ_EXTERNAL = 1234;
     PlacesClient placesClient;
@@ -120,11 +122,11 @@ public class AddVenueActivity extends AppCompatActivity {
                 checkPermissions();
             }
         });
-        
+
         mBtnSaveLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 save_venue();
             }
         });
@@ -137,7 +139,7 @@ public class AddVenueActivity extends AppCompatActivity {
         final String desc = mEdtFarrmDesc.getText().toString().trim();
 
 
-        if (farmLocation == null){
+        if (venueLocation == null){
             loading.setVisibility(View.GONE);
             Toast.makeText(this, "Enter Location", Toast.LENGTH_SHORT).show();
         }
@@ -184,10 +186,10 @@ public class AddVenueActivity extends AppCompatActivity {
                                 // ------------ SAVE IMAGE TO STORAGE & DB -----------------
 
                                 newImage.put("venueImageUrl", task.getResult().toString());
-                                mUserDatabase.updateChildren(newImage); 
+                                mUserDatabase.updateChildren(newImage);
                                 mUserDatabase.child("UserID").setValue(user.getUid());
-                                mUserDatabase.child("Longitude").setValue(farmLocation.longitude);
-                                mUserDatabase.child("Latitude").setValue(farmLocation.latitude);
+                                mUserDatabase.child("Longitude").setValue(venueLocation.longitude);
+                                mUserDatabase.child("Latitude").setValue(venueLocation.latitude);
                                 mUserDatabase.child("PlaceName").setValue(placeName);
                                 mUserDatabase.child("Description").setValue(desc);
                                 mUserDatabase.child("venue_id").setValue(key);
@@ -198,7 +200,7 @@ public class AddVenueActivity extends AppCompatActivity {
                                 Intent intent = new Intent(AddVenueActivity.this, FacilityActivity.class);
                                 intent.putExtra("Key", key);
                                 startActivity(intent);
-                                
+
 
                                 // Toast.makeText(AddVenueActivity.this,
                                 //         "Venue Saved", Toast.LENGTH_SHORT).show();
@@ -235,18 +237,22 @@ public class AddVenueActivity extends AppCompatActivity {
 
             }else {
 
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, 2);
+                // start picker to get image for cropping and then use the image in cropping activity
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(16, 9)
+                        .start(this);
 
             }
 
 
 
         }else {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, 2);
+            // start picker to get image for cropping and then use the image in cropping activity
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(16, 9)
+                    .start(this);
         }
     }
 
@@ -257,7 +263,7 @@ public class AddVenueActivity extends AppCompatActivity {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
-                farmLocation = place.getLatLng();
+                venueLocation = place.getLatLng();
                 placeName = place.getName();
                 mTxtSearchLoc.setText(place.getName());
 
@@ -269,10 +275,16 @@ public class AddVenueActivity extends AppCompatActivity {
             }
         }
         // --------------- VENUE IMAGE RESULT ------------
-        if(requestCode == 2 && resultCode == Activity.RESULT_OK){
-            final Uri imageUri = data.getData();
-            resultUri = imageUri;
-            imgAddVenue.setImageURI(resultUri);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                final Uri pickedResultUri = result.getUri();
+                resultUri = pickedResultUri;
+                imgAddVenue.setImageURI(pickedResultUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
     }
 }
