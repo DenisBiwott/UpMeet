@@ -134,7 +134,7 @@ public class FinalizeBookingActivity extends AppCompatActivity {
                     }
                 });
                 Toast.makeText(FinalizeBookingActivity.this, "Successfully Booked!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(FinalizeBookingActivity.this, BookingsActivity.class));
+                startActivity(new Intent(FinalizeBookingActivity.this, HistoryActivity.class));
 
             }
         });
