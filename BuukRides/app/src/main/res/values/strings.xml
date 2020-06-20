@@ -27,4 +27,7 @@
     <string name="no_venue_prompt">Please add your venue</string>
     <string name="no_bookings_prompt">We haven\'t been booked yet :)</string>
     <string name="no_history_prompt">Reserve a venue to show here</string>
+
+    <string name="what_s_on_your_mind">Enter your query</string>
+    <string name="menu_refresh">Refresh</string>
 </resources>

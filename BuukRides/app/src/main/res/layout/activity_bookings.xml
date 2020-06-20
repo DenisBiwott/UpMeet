@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/no_history_prompt"
+        android:text="@string/no_bookings_prompt"
         android:visibility="gone"
         android:textStyle="bold"
         android:textSize="15sp"
