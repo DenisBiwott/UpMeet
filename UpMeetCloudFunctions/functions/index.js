@@ -171,7 +171,7 @@ exports.koskiCallback = functions.https.onRequest(async (requestf, _response) =>
     ref.set({
       Time: currtime,
       Date: currtimeText,
-      PaymentDesc: "DeliveryPayment",
+      PaymentDesc: "Facility payment",
       ResultCode: requestf.body.Body.stkCallback.ResultCode,
       ResultDesc: requestf.body.Body.stkCallback.ResultDesc,
       MerchantRequestID: requestf.body.Body.stkCallback.MerchantRequestID,
